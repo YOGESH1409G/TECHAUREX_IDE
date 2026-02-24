@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { v2 as cloudinary } from "cloudinary";
+import logger from "../config/logger.js";
 
 const mediaSchema = new mongoose.Schema(
   {
@@ -46,11 +47,11 @@ mediaSchema.pre("remove", async function (next) {
   try {
     if (this.publicId) {
       await cloudinary.uploader.destroy(this.publicId);
-      console.log(`🧹 Deleted Cloudinary file: ${this.publicId}`);
+      logger.info(`🧹 Deleted Cloudinary file: ${this.publicId}`);
     }
     next();
   } catch (error) {
-    console.error("Error deleting Cloudinary file:", error);
+    logger.error("Error deleting Cloudinary file", { error: error.message });
     next(error);
   }
 });

@@ -1,6 +1,7 @@
 // src/controllers/room.controller.js
 import { RoomService } from "../services/room.service.js";
 import {ApiError} from "../utils/ApiError.js";
+import logger from "../config/logger.js";
 
 /**
  * Create a room (group or 1:1)
@@ -8,17 +9,17 @@ import {ApiError} from "../utils/ApiError.js";
  */
 export async function createRoom(req, res, next) {
   try {
-    console.log('\n🎯 === CREATE ROOM REQUEST ===');
-    console.log('User ID:', req.user?.id);
-    console.log('Request body:', JSON.stringify(req.body, null, 2));
+    logger.info('🎯 CREATE ROOM REQUEST');
+    logger.info(`User ID: ${req.user?.id}`);
+    logger.debug(`Request body: ${JSON.stringify(req.body, null, 2)}`);
     
     const payload = req.body;       // roomName, group, etc.
     const userId = req.user.id;     // comes automatically from JWT
 
     const room = await RoomService.createRoom(payload, userId);
 
-    console.log('✅ Room created successfully:', room._id);
-    console.log('📧 Invitation sent:', room.invitationSent || false);
+    logger.info(`✅ Room created successfully: ${room._id}`);
+    logger.info(`📧 Invitation sent: ${room.invitationSent || false}`);
 
     return res.status(201).json({
       success: true,
@@ -26,7 +27,7 @@ export async function createRoom(req, res, next) {
       data: room,
     });
   } catch (error) {
-    console.error('❌ Error creating room:', error.message);
+    logger.error(`❌ Error creating room: ${error.message}`);
     next(error);
   }
 }

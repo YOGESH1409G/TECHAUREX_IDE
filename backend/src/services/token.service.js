@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import Token from "../models/token.model.js";
 import { signAccessToken, verifyToken } from "../helpers/jwt.helper.js";
 import { ApiError } from "../utils/ApiError.js";
+import { loadEnv } from "../config/env.js";
 
 /**
  * Refresh access token using refresh token
@@ -11,9 +12,10 @@ import { ApiError } from "../utils/ApiError.js";
 export async function refreshAccessToken(refreshToken) {
   if (!refreshToken) throw new ApiError(401, "Refresh token missing");
 
+  const config = loadEnv();
   let decoded;
   try {
-    decoded = verifyToken(refreshToken, process.env.JWT_REFRESH_SECRET);
+    decoded = verifyToken(refreshToken, config.JWT_REFRESH_SECRET);
   } catch {
     throw new ApiError(401, "Invalid or expired refresh token");
   }

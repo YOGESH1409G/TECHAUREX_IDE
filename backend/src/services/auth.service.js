@@ -81,7 +81,8 @@ export async function loginUser({ email, password }) {
 export async function logoutUser(refreshToken) {
   if (!refreshToken) throw new ApiError(400, "Refresh token required");
 
-  const decoded = verifyToken(refreshToken, process.env.JWT_REFRESH_SECRET);
+  const config = loadEnv();
+  const decoded = verifyToken(refreshToken, config.JWT_REFRESH_SECRET);
   const userId = decoded.sub;
   const tokens = await Token.find({ user: userId });
   let removed = false;

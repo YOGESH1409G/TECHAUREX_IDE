@@ -23,7 +23,14 @@ export const initSocketServer = async (httpServer) => {
       await initRedis();
 
       // Dynamically import createAdapter only if Redis is used
-      const { createAdapter } = await import("@socket.io/redis-adapter");
+      let createAdapter;
+      try {
+        const redisAdapter = await import("@socket.io/redis-adapter");
+        createAdapter = redisAdapter.createAdapter;
+      } catch (importErr) {
+        logger.warn("⚠️ @socket.io/redis-adapter not installed, skipping Redis adapter");
+        throw importErr;
+      }
 
       const pubClient = getPubClient();
       const subClient = getSubClient();
@@ -33,7 +40,7 @@ export const initSocketServer = async (httpServer) => {
       logger.info("✅ Redis adapter attached");
       
     } catch (err) {
-      logger.error("❌ Redis adapter failed, continuing without Redis:", err);
+      logger.error(`❌ Redis adapter failed, continuing in single-instance mode: ${err.message}`);
     }
   } else {
     // Redis not enabled → run in single-instance mode

@@ -1,11 +1,13 @@
 // src/sockets/index.js
+import logger from "../config/logger.js";
+
 //TODO - to complete
 export function initNamespaces(io) {
   // Minimal: just log when a client connects
   io.on("connection", (socket) => {
-    console.log(`🟢 Connected: ${socket.id}`);
+    logger.info(`🟢 Connected: ${socket.id}`);
     socket.on("disconnect", (reason) => {
-      console.log(`🔴 Disconnected (${socket.id}): ${reason}`);
+      logger.info(`🔴 Disconnected (${socket.id}): ${reason}`);
     });
   });
 }

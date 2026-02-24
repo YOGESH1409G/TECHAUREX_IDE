@@ -1,6 +1,7 @@
 // services/email.service.js
 import * as brevo from '@getbrevo/brevo';
 import { loadEnv } from '../config/env.js';
+import logger from '../config/logger.js';
 
 const env = loadEnv();
 
@@ -26,20 +27,18 @@ function initializeBrevoClient() {
  */
 export async function sendRoomInvitation(recipientEmail, roomCode, inviterName, roomId) {
   try {
-    console.log('📧 Attempting to send invitation email...');
-    console.log('   Recipient:', recipientEmail);
-    console.log('   Room Code:', roomCode);
-    console.log('   Inviter:', inviterName);
+    logger.info(`📧 Attempting to send invitation email to ${recipientEmail}`);
+    logger.info(`   Room Code: ${roomCode}, Inviter: ${inviterName}`);
     
     const client = initializeBrevoClient();
     
     if (!client) {
       const error = new Error('Brevo API client not initialized. Check BREVO_API_KEY.');
-      console.error('❌ Brevo client initialization failed');
+      logger.error('❌ Brevo client initialization failed');
       throw error;
     }
     
-    console.log('✅ Brevo client initialized');
+    logger.info('✅ Brevo client initialized');
 
     const joinUrl = `${env.CLIENT_URL}/join-room?code=${roomCode}&email=${encodeURIComponent(recipientEmail)}`;
     
@@ -186,10 +185,10 @@ Need help? Visit ${env.CLIENT_URL}/help or contact support.
       'X-Room-Code': roomCode,
     };
 
-    console.log('📤 Sending email via Brevo API...');
+    logger.info('📤 Sending email via Brevo API...');
     const response = await client.sendTransacEmail(sendSmtpEmail);
     
-    console.log('✅ Room invitation email sent successfully:', {
+    logger.info('✅ Room invitation email sent successfully', {
       recipientEmail,
       roomCode,
       messageId: response.messageId,
@@ -197,9 +196,8 @@ Need help? Visit ${env.CLIENT_URL}/help or contact support.
     
     return response;
   } catch (error) {
-    console.error('❌ Failed to send room invitation email:', error);
-    console.error('   Error details:', {
-      message: error.message,
+    logger.error('❌ Failed to send room invitation email', {
+      error: error.message,
       response: error.response?.body,
       status: error.response?.status,
     });
@@ -219,7 +217,7 @@ export async function sendWelcomeEmail(recipientEmail, userName, roomName) {
     const client = initializeBrevoClient();
     
     if (!client) {
-      console.warn('Brevo API client not initialized. Skipping welcome email.');
+      logger.warn('Brevo API client not initialized. Skipping welcome email.');
       return null;
     }
 
@@ -295,14 +293,14 @@ export async function sendWelcomeEmail(recipientEmail, userName, roomName) {
 
     const response = await client.sendTransacEmail(sendSmtpEmail);
     
-    console.log('Welcome email sent successfully:', {
+    logger.info('Welcome email sent successfully', {
       recipientEmail,
       messageId: response.messageId,
     });
     
     return response;
   } catch (error) {
-    console.error('Failed to send welcome email:', error);
+    logger.error('Failed to send welcome email', { error: error.message });
     // Don't throw error for welcome emails, just log it
     return null;
   }
