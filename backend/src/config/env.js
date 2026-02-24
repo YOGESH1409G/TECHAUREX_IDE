@@ -21,6 +21,9 @@ export function loadEnv() {
     GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET,
     GITHUB_CALLBACK_URL,
+    BREVO_API_KEY,
+    BREVO_SENDER_EMAIL = "noreply@techaurex.com",
+    BREVO_SENDER_NAME = "TechAurex",
   } = process.env;
 
   if (!MONGO_URI) throw new Error("MONGO_URI is required");
@@ -58,5 +61,8 @@ export function loadEnv() {
     GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET,
     GITHUB_CALLBACK_URL,
+    BREVO_API_KEY,
+    BREVO_SENDER_EMAIL,
+    BREVO_SENDER_NAME,
   };
 }

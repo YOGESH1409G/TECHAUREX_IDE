@@ -1,0 +1,16 @@
+[dotenv@17.2.3] injecting env (20) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[2026-02-24 21:59:34.774 +0530] [32mINFO[39m: [36m✅ MongoDB connected: ac-31x9qlp-shard-00-00.6doahm3.mongodb.net[39m
+[2026-02-24 21:59:34.780 +0530] [32mINFO[39m: [36m⚡ Socket.IO server started[39m
+[2026-02-24 21:59:34.780 +0530] [32mINFO[39m: [36mℹ️ Redis disabled — single-instance mode[39m
+[2026-02-24 21:59:34.780 +0530] [32mINFO[39m: [36m📡 Namespaces initialized[39m
+[2026-02-24 21:59:34.780 +0530] [32mINFO[39m: [36m🚀 Socket.IO ready[39m
+[2026-02-24 21:59:34.781 +0530] [32mINFO[39m: [36m✅ Server running on port 4000 in development mode[39m
+[2026-02-24 21:59:34.781 +0530] [32mINFO[39m: [36m🌐 Health check URL: http://localhost:4000/api/v1/health[39m
+[0mPOST /api/v1/auth/logout [32m200[0m 188.636 ms - 113[0m
+[0mPOST /api/v1/auth/login [32m200[0m 280.816 ms - 1568[0m
+[0mGET /api/v1/rooms [32m200[0m 182.656 ms - 16046[0m
+[2026-02-24 22:00:56.114 +0530] [32mINFO[39m: [36m📋 Retrieved 20 rooms for user 69807984227432075ac2dc3f[39m
+[0mGET /api/v1/rooms [36m304[0m 166.698 ms - -[0m
+[0mGET /api/v1/rooms [36m304[0m 166.747 ms - -[0m
+[2026-02-24 22:01:01.220 +0530] [32mINFO[39m: [36m📋 Retrieved 20 rooms for user 69807984227432075ac2dc3f[39m
+[2026-02-24 22:01:01.225 +0530] [32mINFO[39m: [36m📋 Retrieved 20 rooms for user 69807984227432075ac2dc3f[39m

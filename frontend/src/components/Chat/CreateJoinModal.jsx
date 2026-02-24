@@ -13,6 +13,8 @@ export default function CreateJoinModal({ type, onClose, onJoin }) {
   const [contacts, setContacts] = useState([]);
   const [selectedContact, setSelectedContact] = useState(null);
   const [loadingContacts, setLoadingContacts] = useState(false);
+  const [useEmailInvite, setUseEmailInvite] = useState(false); // Toggle between contact/email
+  const [inviteEmail, setInviteEmail] = useState(""); // Email for invitation
 
   // Group Room state
   const [roomName, setRoomName] = useState("");
@@ -83,6 +85,52 @@ export default function CreateJoinModal({ type, onClose, onJoin }) {
   };
 
   const handleCreate1on1 = async () => {
+    // Email invitation flow
+    if (useEmailInvite) {
+      if (!inviteEmail.trim()) {
+        setError("Please enter an email address");
+        return;
+      }
+
+      // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(inviteEmail.trim())) {
+        setError("Please enter a valid email address");
+        return;
+      }
+
+      setLoading(true);
+      setError("");
+
+      try {
+        const room = await createRoom({
+          group: false,
+          inviteByEmail: inviteEmail.trim().toLowerCase(),
+        });
+
+        // Check if invitation was sent
+        if (room.invitationSent) {
+          setCreatedRoom({
+            ...room,
+            roomCode: room.roomCode,
+            invitedEmail: room.invitedEmail,
+            isInvitation: true,
+          });
+          // Don't close - show success message with room code
+        } else {
+          // User already exists, room created normally
+          onJoin(room);
+          onClose();
+        }
+      } catch (err) {
+        setError(err.response?.data?.message || "Failed to send invitation");
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    // Contact selection flow (existing)
     if (!selectedContact) {
       setError("Please select a contact");
       return;
@@ -240,48 +288,116 @@ export default function CreateJoinModal({ type, onClose, onJoin }) {
     );
   }
 
-  // Render Step 2A: One-to-One Room (Contacts List)
+  // Render Step 2A: One-to-One Room (Contacts List or Email Invite)
   if (step === 2 && group === false) {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div className="bg-[#121212] rounded-xl p-6 w-[400px] max-h-[600px] border border-slate-700 flex flex-col">
-          <h2 className="text-xl font-semibold mb-4">Select Contact</h2>
+          <h2 className="text-xl font-semibold mb-4">
+            {useEmailInvite ? "Invite by Email" : "Select Contact"}
+          </h2>
 
-          {loadingContacts ? (
-            <div className="flex-1 flex items-center justify-center text-slate-400">
-              Loading contacts...
-            </div>
-          ) : contacts.length === 0 ? (
-            <div className="flex-1 flex items-center justify-center text-slate-400">
-              No contacts available
+          {/* Toggle between contact list and email invite */}
+          <div className="flex gap-2 mb-4">
+            <button
+              onClick={() => {
+                setUseEmailInvite(false);
+                setInviteEmail("");
+                setError("");
+              }}
+              className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                !useEmailInvite
+                  ? "bg-indigo-500 text-white"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700"
+              }`}
+            >
+              📇 Contacts
+            </button>
+            <button
+              onClick={() => {
+                setUseEmailInvite(true);
+                setSelectedContact(null);
+                setError("");
+              }}
+              className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                useEmailInvite
+                  ? "bg-indigo-500 text-white"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700"
+              }`}
+            >
+              📧 Email Invite
+            </button>
+          </div>
+
+          {/* Email Invite Form */}
+          {useEmailInvite ? (
+            <div className="flex-1 flex flex-col">
+              <p className="text-slate-400 text-sm mb-3">
+                Send an invitation to someone's email. They'll receive a link to join your room.
+              </p>
+              <input
+                type="email"
+                placeholder="friend@example.com"
+                value={inviteEmail}
+                onChange={(e) => {
+                  setInviteEmail(e.target.value);
+                  setError("");
+                }}
+                className="w-full bg-slate-900 p-3 rounded-lg mb-3 outline-none text-white border-2 border-transparent focus:border-indigo-500 transition-all"
+                disabled={loading}
+                autoFocus
+              />
+              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 mb-4">
+                <p className="text-yellow-400 text-xs">
+                  ⏰ Invitation expires in 7 days. The recipient will need to sign up or log in to join.
+                </p>
+              </div>
             </div>
           ) : (
-            <div className="flex-1 overflow-y-auto mb-4 space-y-2">
-              {contacts.map((contact) => (
-                <button
-                  key={contact.id || contact._id}
-                  onClick={() => setSelectedContact(contact)}
-                  className={`w-full p-3 rounded-lg text-left transition-all ${
-                    selectedContact?.id === contact.id ||
-                    selectedContact?._id === contact._id
-                      ? "bg-indigo-500/20 border-2 border-indigo-500"
-                      : "bg-slate-900 hover:bg-slate-800 border-2 border-transparent"
-                  }`}
-                >
-                  <div className="font-medium text-white">
-                    {contact.displayName ||
-                      contact.name ||
-                      contact.email ||
-                      "Unknown"}
-                  </div>
-                  {contact.email && (
-                    <div className="text-xs text-slate-400 mt-1">
-                      {contact.email}
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
+            /* Contact List */
+            <>
+              {loadingContacts ? (
+                <div className="flex-1 flex items-center justify-center text-slate-400">
+                  Loading contacts...
+                </div>
+              ) : contacts.length === 0 ? (
+                <div className="flex-1 flex flex-col items-center justify-center text-slate-400 text-center">
+                  <div className="text-4xl mb-2">📭</div>
+                  <p>No contacts available</p>
+                  <p className="text-xs mt-2">Try inviting by email instead!</p>
+                </div>
+              ) : (
+                <div className="flex-1 overflow-y-auto mb-4 space-y-2">
+                  {contacts.map((contact) => (
+                    <button
+                      key={contact.id || contact._id}
+                      onClick={() => {
+                        setSelectedContact(contact);
+                        setError("");
+                      }}
+                      className={`w-full p-3 rounded-lg text-left transition-all ${
+                        selectedContact?.id === contact.id ||
+                        selectedContact?._id === contact._id
+                          ? "bg-indigo-500/20 border-2 border-indigo-500"
+                          : "bg-slate-900 hover:bg-slate-800 border-2 border-transparent"
+                      }`}
+                    >
+                      <div className="font-medium text-white">
+                        {contact.displayName ||
+                          contact.name ||
+                          contact.email ||
+                          "Unknown"}
+                      </div>
+                      {contact.email && (
+                        <div className="text-xs text-slate-400 mt-1">
+                          {contact.email}
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
           )}
 
           {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
@@ -297,9 +413,13 @@ export default function CreateJoinModal({ type, onClose, onJoin }) {
             <button
               onClick={handleCreate1on1}
               className="px-4 py-1 rounded bg-gradient-to-r from-indigo-500 to-blue-500 disabled:opacity-50"
-              disabled={!selectedContact || loading}
+              disabled={
+                (!selectedContact && !useEmailInvite) ||
+                (useEmailInvite && !inviteEmail.trim()) ||
+                loading
+              }
             >
-              {loading ? "Creating..." : "Create"}
+              {loading ? "Sending..." : useEmailInvite ? "Send Invitation" : "Create"}
             </button>
           </div>
         </div>
@@ -311,24 +431,65 @@ export default function CreateJoinModal({ type, onClose, onJoin }) {
   if (step === 2 && group === true) {
     // If room created, show success with room code
     if (createdRoom) {
+      const isInvitation = createdRoom.isInvitation;
+
       return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-[#121212] rounded-xl p-6 w-[400px] border border-slate-700">
-            <h2 className="text-xl font-semibold mb-4">Room Created!</h2>
-            <div className="mb-4">
-              <p className="text-slate-400 text-sm mb-2">Room Code:</p>
-              <div className="flex items-center gap-2 bg-slate-900 p-3 rounded">
-                <code className="flex-1 text-lg font-mono text-white">
-                  {createdRoom.roomCode || createdRoom.code || "N/A"}
-                </code>
-                <button
-                  onClick={copyRoomCode}
-                  className="px-3 py-1 bg-slate-800 rounded hover:bg-slate-700 text-sm"
-                >
-                  Copy
-                </button>
+            <h2 className="text-xl font-semibold mb-4">
+              {isInvitation ? "Invitation Sent! 📧" : "Room Created! 🎉"}
+            </h2>
+
+            {isInvitation ? (
+              <div className="mb-4 space-y-4">
+                <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
+                  <p className="text-green-400 text-sm mb-2">
+                    ✅ Invitation email sent to:
+                  </p>
+                  <p className="text-white font-medium">{createdRoom.invitedEmail}</p>
+                </div>
+
+                <div>
+                  <p className="text-slate-400 text-sm mb-2">Room Code:</p>
+                  <div className="flex items-center gap-2 bg-slate-900 p-3 rounded-lg">
+                    <code className="flex-1 text-lg font-mono text-indigo-400 font-bold tracking-wider">
+                      {createdRoom.roomCode || "N/A"}
+                    </code>
+                    <button
+                      onClick={copyRoomCode}
+                      className="px-3 py-1 bg-slate-800 rounded hover:bg-slate-700 text-sm transition-all hover:scale-105"
+                    >
+                      📋 Copy
+                    </button>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-2">
+                    Share this code manually if they don't receive the email
+                  </p>
+                </div>
+
+                <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
+                  <p className="text-blue-400 text-xs">
+                    💡 They'll automatically join the room when they sign up or log in using the email link. 
+                    The invitation expires in 7 days.
+                  </p>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="mb-4">
+                <p className="text-slate-400 text-sm mb-2">Room Code:</p>
+                <div className="flex items-center gap-2 bg-slate-900 p-3 rounded">
+                  <code className="flex-1 text-lg font-mono text-white">
+                    {createdRoom.roomCode || createdRoom.code || "N/A"}
+                  </code>
+                  <button
+                    onClick={copyRoomCode}
+                    className="px-3 py-1 bg-slate-800 rounded hover:bg-slate-700 text-sm"
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
+            )}
 
             <div className="flex justify-between">
               <button
@@ -337,12 +498,14 @@ export default function CreateJoinModal({ type, onClose, onJoin }) {
               >
                 Close
               </button>
-              <button
-                onClick={handleGoToChat}
-                className="px-4 py-1 rounded bg-gradient-to-r from-indigo-500 to-blue-500"
-              >
-                Go to Chat
-              </button>
+              {!isInvitation && (
+                <button
+                  onClick={handleGoToChat}
+                  className="px-4 py-1 rounded bg-gradient-to-r from-indigo-500 to-blue-500"
+                >
+                  Go to Chat
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { signupUser, startGoogleOAuth, startGitHubOAuth } from '../../services/authService';
 import './AuthStyles.css';
@@ -14,6 +14,15 @@ export default function SignupPage() {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Pre-fill email from query params (from invitation)
+  useEffect(() => {
+    const emailParam = searchParams.get('email');
+    if (emailParam) {
+      setEmail(emailParam);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +32,14 @@ export default function SignupPage() {
     try {
       const response = await signupUser({ displayName, email, phoneNumber, password });
       login(response.user, response.token || response.accessToken);
-      navigate('/editor');
+      
+      // Check for redirect parameter (from invitation flow)
+      const redirectUrl = searchParams.get('redirect');
+      if (redirectUrl) {
+        navigate(redirectUrl, { replace: true });
+      } else {
+        navigate('/editor');
+      }
     } catch (err) {
       // Backend errors are wrapped in ApiResponse
       const errorMessage = err.response?.data?.message || 

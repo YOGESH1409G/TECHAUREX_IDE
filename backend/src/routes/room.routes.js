@@ -1,10 +1,12 @@
 import express from "express";
-import { createRoom } from "../controllers/room.controller.js";
+import { createRoom, joinRoom, getUserRooms } from "../controllers/room.controller.js";
 import { protectAuth } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-// Only route you need for now
-router.post("/create", protectAuth, createRoom);
+// Room routes
+router.get("/", protectAuth, getUserRooms);
+router.post("/", protectAuth, createRoom);
+router.post("/join", protectAuth, joinRoom);
 
 export default router;

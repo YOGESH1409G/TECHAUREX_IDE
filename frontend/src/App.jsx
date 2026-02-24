@@ -5,6 +5,7 @@ import { useSettings } from './context/SettingsContext';
 import LoginPage from './pages/Auth/LoginPage';
 import SignupPage from './pages/Auth/SignupPage';
 import OAuthCallbackPage from './pages/Auth/OAuthCallbackPage';
+import JoinRoom from './pages/JoinRoom';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import CodeEditor from './components/CodeEditor';
@@ -101,6 +102,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
+          <Route path="/join-room" element={<JoinRoom />} />
 
           {/* Protected Route - Editor */}
           <Route

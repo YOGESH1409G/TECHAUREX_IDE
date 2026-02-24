@@ -6,7 +6,7 @@ import api from './api';
  */
 export const getContacts = async () => {
   try {
-    const { data: response } = await api.get('/api/v1/contacts');
+    const { data: response } = await api.get('/api/v1/user/contacts');
     // Backend wraps in ApiResponse, access via response.data
     return response.data || [];
   } catch (error) {
@@ -49,6 +49,20 @@ export const joinRoomByCode = async (roomCode) => {
     return response.data;
   } catch (error) {
     console.error('Error joining room:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get all rooms for logged-in user
+ * @returns {Promise<Array>} Array of room objects
+ */
+export const getUserRooms = async () => {
+  try {
+    const { data: response } = await api.get('/api/v1/rooms');
+    return response.data || [];
+  } catch (error) {
+    console.error('Error fetching user rooms:', error);
     throw error;
   }
 };
