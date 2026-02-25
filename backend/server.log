@@ -14,3 +14,41 @@
 [0mGET /api/v1/rooms [36m304[0m 166.747 ms - -[0m
 [2026-02-24 22:01:01.220 +0530] [32mINFO[39m: [36m📋 Retrieved 20 rooms for user 69807984227432075ac2dc3f[39m
 [2026-02-24 22:01:01.225 +0530] [32mINFO[39m: [36m📋 Retrieved 20 rooms for user 69807984227432075ac2dc3f[39m
+[2026-02-25 01:29:50.908 +0530] [33mWARN[39m: [36m⚠️ MongoDB disconnected[39m
+[2026-02-25 01:29:50.947 +0530] [32mINFO[39m: [36m📡 MongoDB connected[39m
+[2026-02-25 01:29:50.947 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 01:37:01.929 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 04:28:26.388 +0530] [33mWARN[39m: [36m⚠️ MongoDB disconnected[39m
+[2026-02-25 04:28:26.391 +0530] [32mINFO[39m: [36m📡 MongoDB connected[39m
+[2026-02-25 04:28:26.391 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 04:45:48.192 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 05:25:10.310 +0530] [33mWARN[39m: [36m⚠️ MongoDB disconnected[39m
+[2026-02-25 05:25:10.519 +0530] [32mINFO[39m: [36m📡 MongoDB connected[39m
+[2026-02-25 05:25:10.520 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 05:29:21.186 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 05:29:21.187 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 05:29:31.600 +0530] [33mWARN[39m: [36m⚠️ MongoDB disconnected[39m
+[2026-02-25 05:29:31.816 +0530] [32mINFO[39m: [36m📡 MongoDB connected[39m
+[2026-02-25 05:29:31.816 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 05:47:37.191 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 06:45:54.182 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 08:32:26.823 +0530] [33mWARN[39m: [36m⚠️ MongoDB disconnected[39m
+[2026-02-25 08:32:28.342 +0530] [32mINFO[39m: [36m📡 MongoDB connected[39m
+[2026-02-25 08:32:28.342 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 09:12:32.593 +0530] [33mWARN[39m: [36m⚠️ MongoDB disconnected[39m
+[2026-02-25 09:12:32.851 +0530] [32mINFO[39m: [36m📡 MongoDB connected[39m
+[2026-02-25 09:12:32.851 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 09:30:09.166 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 09:30:09.167 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 09:33:26.291 +0530] [33mWARN[39m: [36m⚠️ MongoDB disconnected[39m
+[2026-02-25 09:33:26.515 +0530] [32mINFO[39m: [36m📡 MongoDB connected[39m
+[2026-02-25 09:33:26.515 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 09:50:39.169 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 09:50:39.169 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 10:32:00.938 +0530] [33mWARN[39m: [36m⚠️ MongoDB disconnected[39m
+[2026-02-25 10:32:00.976 +0530] [32mINFO[39m: [36m📡 MongoDB connected[39m
+[2026-02-25 10:32:00.976 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 10:37:05.922 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
+[2026-02-25 11:28:58.891 +0530] [33mWARN[39m: [36m⚠️ MongoDB disconnected[39m
+[2026-02-25 11:28:59.033 +0530] [32mINFO[39m: [36m📡 MongoDB connected[39m
+[2026-02-25 11:28:59.033 +0530] [32mINFO[39m: [36m🔁 MongoDB reconnected[39m
