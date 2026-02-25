@@ -1,5 +1,6 @@
 # Environment Variables with Secrets
 RENDER_ENV_VARS.md
+VERCEL_ENV_VARS.md
 .env.production
 
 # OS Files

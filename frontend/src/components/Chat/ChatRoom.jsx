@@ -32,16 +32,11 @@ export default function ChatRoom({ room, username, onBack }) {
       setMessages((prev) => [...prev, msg]);
     });
 
-    let cancelled = false;
-    setLoading(true);
-    fetch(`/api/rooms/${room.id}/chat`)
-      .then((res) => res.json())
-      .then((data) => { if (!cancelled) setMessages(data); })
-      .catch(() => { /* silent for demo */ })
-      .finally(() => { if (!cancelled) setLoading(false); });
+    // Note: Chat history loading via API will be implemented when backend message routes are ready
+    // For now, messages are received only via socket after joining
+    setLoading(false);
 
     return () => {
-      cancelled = true;
       if (socketRef.current) socketRef.current.disconnect();
     };
   }, [room.id, token]); // Add token to dependencies

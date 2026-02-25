@@ -44,10 +44,12 @@ export const SocketProvider = ({ children }) => {
     // Listen for presence events (backend uses user:online and user:offline)
     socket.on("user:online", ({ userId }) => {
       // Handle user online
-      console.log("User online:", userId);
+      if (import.meta.env.DEV) console.log("User online:", userId);
     });
 
     socket.on("user:offline", ({ userId, lastSeen }) => {
+      // Handle user offline  
+      if (import.meta.env.DEV) console.log("User offline:", userId, lastSeen);
       // Handle user offline
       console.log("User offline:", userId, lastSeen);
     });
